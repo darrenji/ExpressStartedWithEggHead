@@ -24,6 +24,10 @@ app.engine('hbs', engines.handlebars)
 app.set('views', './views')
 app.set('view engine', 'hbs')
 
+//使用静态文件
+//这里做了一个映射，每次请求profilepics下的文件的时候，就到images目录中去找
+app.use('/profilepics', express.static('images'))
+
 //返回index.jade,并把内存中的users传递给index.jade
 //index.jade就是一个模板
 app.get('/', function(req, res){
@@ -37,7 +41,7 @@ app.get(/big.*/, function(req, res, next){
 
 app.get('/:username', function(req, res){
     var username = req.params.username
-    res.send(username)
+    res.render('user', {username: username})
 })
 
 
