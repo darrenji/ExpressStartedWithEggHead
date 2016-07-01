@@ -1,3 +1,7 @@
+本节源代码参考这里：https://github.com/bclinkinbeard/egghead-getting-started-with-express/tree/10-mongodb-integration
+
+<br>
+
 > npm install mongodb --save
 
 <br>
