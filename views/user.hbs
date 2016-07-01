@@ -51,7 +51,7 @@
   <div class="pic">
     <img src="/profilepics/{{user.username}}_med.jpg">
     <p>
-      <a href="#" onclick="edit()">Edit</a>
+      <a href="/{{user.username}}/edit" onclick="edit()">Edit</a>
       <a href="#" onclick="del()">Delete</a>
     </p>
   </div>
@@ -80,23 +80,17 @@
       <input type="submit" value="Cancel" onclick="cancel()">
     </dd>
   </dl>
- <!--可以使用jquery很好-->
+
   <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script>
-      
-    //更新时的视图切换
     function edit () {
       $('.view').hide()
       $('.edit').show()
     }
-      
-    //取消时的视图切换
     function cancel () {
       $('.view').show()
       $('.edit').hide()
     }
-      
-    //更新，PUT请求
     function save () {
       $.ajax('/{{user.username}}', {
         method: 'PUT',
@@ -112,8 +106,6 @@
         }
       })
     }
-    
-    //删除，DELETE请求
     function del () {
       $.ajax('/{{user.username}}', {
         method: 'DELETE',
