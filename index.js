@@ -74,8 +74,41 @@ app.get('/', function (req, res) {
   })
 })
 
+//验证用户
+function verifyUser(req, res, next){
+    var fp = getUserFilePath(req.params.username)
+    
+    fs.exists(fp, function(yes){
+        if(yes){
+            next()
+        } else {
+            res.redirect('/error/' + req.params.username)
+        }
+    })
+}
+
+//下载用户的json文件
+//req.path=*.json
+app.get('*.json', function(req, res){
+    res.download('./users' + req.path, 'othername')
+})
+
+//直接返回json数据
+app.get('/data/:username', function(req, res){
+    var username = req.params.username
+    var user = getUser(username)
+    res.json(user)
+})
+
+//路由的日志记录
+app.all('/:username', function(req, res, next){
+    console.log(req.method, 'for', req.params.username)
+    next()
+})
+
+
 //请求某个用户
-app.get('/:username', function (req, res) {
+app.get('/:username', verifyUser, function (req, res) {
   //从路由参数中获取username的属性值
   var username = req.params.username
   //获取某个用户的json文件
@@ -85,6 +118,11 @@ app.get('/:username', function (req, res) {
     user: user,
     address: user.location
   })
+})
+
+//上面这个路由出现错误就到这里来
+app.get('/error/:username', function(req, res){
+    res.status(404).send('no user named ' + req.params.username + ' found')
 })
 
 //更新
