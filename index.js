@@ -4,6 +4,8 @@ var app = express()
 
 var fs = require('fs')
 var _ = require('lodash')
+var engines = require('consolidate')
+
 var users = []
 
 fs.readFile('users.json', {encoding: 'utf8'}, function(err, data){
@@ -15,13 +17,17 @@ fs.readFile('users.json', {encoding: 'utf8'}, function(err, data){
     })
 })
 
+//当使用hbs后缀的文件时，使用engines.handlebars这个对象
+app.engine('hbs', engines.handlebars)
+
+//到view目录下找以jade为后缀名的文件
+app.set('views', './views')
+app.set('view engine', 'hbs')
+
+//返回index.jade,并把内存中的users传递给index.jade
+//index.jade就是一个模板
 app.get('/', function(req, res){
-    var buffer = ''
-    
-    users.forEach(function(user){
-        buffer += '<a href="/' + user.username + '">' + user.name.full + '</a><br>'
-    })
-    res.send(buffer)
+    res.render('index', {users: users})
 }) 
 
 app.get(/big.*/, function(req, res, next){
