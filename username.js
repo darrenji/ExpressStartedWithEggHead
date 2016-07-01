@@ -11,6 +11,13 @@ router.all('/', function (req, res, next) {
   next()
 })
 
+
+//使用中间件
+router.use(function(req, res, next){
+    console.log(req.method, 'for ', req.params.username, ' at' + req.path)
+    next()
+})
+
 router.get('/', helpers.verifyUser, function (req, res) {
   var username = req.params.username
   var user = helpers.getUser(username)
@@ -18,6 +25,12 @@ router.get('/', helpers.verifyUser, function (req, res) {
     user: user,
     address: user.location
   })
+})
+
+//使用中间件
+router.use(function (err, req, res, next) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
 })
 
 router.get('/edit', function (req, res) {
